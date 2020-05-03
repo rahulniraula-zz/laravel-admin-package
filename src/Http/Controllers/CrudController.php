@@ -3,9 +3,8 @@
 namespace Geeklearners\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use Geeklearners\Exceptions\FieldsNotDeclaredException;
 use Geeklearners\Exceptions\InvalidModelException;
-use Illuminate\Contracts\Session\Session;
-use Illuminate\Support\Str;
 
 class CrudController extends Controller
 {
@@ -62,11 +61,15 @@ class CrudController extends Controller
     }
     public function create()
     {
-        $fields = $this->modelPath::$form_fields;
-        return view("admin::create")
-            ->with('modelUrlSegment', $this->modelUrlSegment)
-            ->with('class_name', $this->modelPath)
-            ->with('fields', $fields);
+        if (property_exists($this->modelPath, 'form_fields')) {
+            $fields = $this->modelPath::$form_fields;
+            return view("admin::create")
+                ->with('modelUrlSegment', $this->modelUrlSegment)
+                ->with('class_name', $this->modelPath)
+                ->with('fields', $fields);
+        } else {
+            throw new FieldsNotDeclaredException("Please declare static 'form_fields' property in $this->modelPath ");
+        }
     }
 
     public function store()

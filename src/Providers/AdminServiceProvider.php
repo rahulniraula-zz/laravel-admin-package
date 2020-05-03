@@ -11,7 +11,7 @@ class AdminServiceProvider extends ServiceProvider
         $this->loadMigrationsFrom(dirname(__DIR__) . "/database/Migration");
         $this->loadRoutesFrom(dirname(__DIR__) . '/Route/web.php');
         $this->loadViewsFrom(dirname(__DIR__) . "/Resources/Views", "admin");
-        $this->publishes([dirname(__DIR__) . '/Config/admin.php' => config_path('admin.php')]);
+        $this->publishes([dirname(__DIR__) . '/Config/admin.php' => config_path('admin.php')], "geeklearners_admin");
         $this->publishes([dirname(__DIR__) . '/Resources/Views' => resource_path('views/vendor/admin')]);
     }
     public function register()

@@ -8,3 +8,10 @@
     {{Session::get('flash_success')}}
 </div>
 @endif
+@if($errors->any)
+<div class="alert alert-danger">
+    @foreach($errors->all() as $err)
+    {{$err}}
+    @endforeach
+</div>
+@endif
