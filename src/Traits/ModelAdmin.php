@@ -4,10 +4,8 @@ namespace Geeklearners\Traits;
 
 trait ModelAdmin
 {
-    public static $form_fields = [];
     public static $form_submit_button = ['type' => 'button', 'value' => "Submit", 'class' => 'btn btn-primary'];
     public static $form_update_button = ['type' => 'button', 'value' => "Update", 'class' => 'btn btn-primary'];
-
 
     public function getValue($col, $method)
     {
