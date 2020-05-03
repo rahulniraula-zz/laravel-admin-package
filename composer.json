@@ -1,0 +1,22 @@
+{
+    "name": "geeklearners/laravel-admin",
+    "description": "Laravel Admin Panel Generator Package",
+    "type": "laravel-package",
+    "require": {
+        "laravelcollective/html": "^6.0@dev",
+        "laravel/laravel": "6.0.0"
+    },
+    "license": "MIT",
+    "authors": [{
+        "name": "Geek Learners",
+        "email": "rahul.niraula@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Geeklearners\\Providers\\AdminServiceProvider"
+            ]
+        }
+    }
+}
