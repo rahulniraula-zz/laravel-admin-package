@@ -3,8 +3,7 @@
     "description": "Laravel Admin Panel Generator Package",
     "type": "laravel-package",
     "require": {
-        "laravelcollective/html": "^6.0@dev",
-        "laravel/laravel": "^6.0.0"
+        "laravelcollective/html": "^6.0@dev"
     },
     "license": "MIT",
     "authors": [{
