@@ -11,6 +11,11 @@
         "email": "rahul.niraula@gmail.com"
     }],
     "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "Geeklearners\\": "src/"
+        }
+    },
     "extra": {
         "laravel": {
             "providers": [
