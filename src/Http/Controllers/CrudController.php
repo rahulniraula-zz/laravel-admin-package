@@ -43,7 +43,8 @@ class CrudController extends Controller
         $additional_cols = method_exists($this->modelPath, 'additionalColumns') ? call_user_func([$this->modelPath, 'additionalColumns']) : [];
         $a_cols = $this->filterColsName($additional_cols);
         // dd($a_cols);
-        return view("admin::index")->with(['items' => $items, 'cols' => $cols, 'a_cols' => $a_cols]);
+        return view("admin::index")
+            ->with(['items' => $items, 'cols' => $cols, 'a_cols' => $a_cols])->with('class_name', $this->modelPath);
     }
 
     private function filterColsName($cols)
@@ -61,14 +62,14 @@ class CrudController extends Controller
     }
     public function create()
     {
-        if (property_exists($this->modelPath, 'form_fields')) {
-            $fields = $this->modelPath::$form_fields;
+        if (method_exists($this->modelPath, 'formFields')) {
+            $fields = $this->modelPath::formFields();
             return view("admin::create")
                 ->with('modelUrlSegment', $this->modelUrlSegment)
                 ->with('class_name', $this->modelPath)
                 ->with('fields', $fields);
         } else {
-            throw new FieldsNotDeclaredException("Please declare static 'form_fields' property in $this->modelPath ");
+            throw new FieldsNotDeclaredException("Please declare static 'formFields' method in $this->modelPath ");
         }
     }
 

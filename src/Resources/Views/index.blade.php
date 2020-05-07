@@ -4,10 +4,10 @@
 <table class="table table-hover">
     <tr>
         @foreach($cols as $col)
-        <th>{{$col}}</th>
+        <th>{{$class_name::getLabel($col)}}</th>
         @endforeach
         @foreach($a_cols as $a_col)
-        <th>{{$a_col}}</th>
+        <th>{{$class_name::getLabel($a_col)}}</th>
         @endforeach
     </tr>
     @foreach($items as $item)

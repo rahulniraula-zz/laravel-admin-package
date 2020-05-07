@@ -5,7 +5,7 @@
     @foreach($fields as $field_name=>$metadata)
     <div class="{{isset($metadata['wrapper_css_class'])?$metadata['wrapper_css_class']:'col-md-4'}}">
         <div class="form-group">
-            {!! Form::label($field_name,ucwords($field_name))!!}
+            {!! Form::label($field_name,$class_name::getLabel($field_name))!!}
             {!! Geeklearners\Util\Util::buildForm($field_name,$metadata) !!}
         </div>
     </div>
