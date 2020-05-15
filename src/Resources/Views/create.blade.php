@@ -1,6 +1,6 @@
 @extends(config('admin.base_admin_layout'))
 @section('admin_content')
-{!! Form::open(['url' =>route(config('admin.prefix') . '.store',['model'=>$modelUrlSegment]) ]) !!}
+{!! Form::open(['url' =>route(config('admin.prefix') . '.store',['model'=>$modelUrlSegment]),'files'=>true ]) !!}
 <div class="row">
     @foreach($fields as $field_name=>$metadata)
     <div class="{{isset($metadata['wrapper_css_class'])?$metadata['wrapper_css_class']:'col-md-4'}}">

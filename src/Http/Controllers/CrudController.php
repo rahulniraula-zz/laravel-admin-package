@@ -5,6 +5,8 @@ namespace Geeklearners\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Geeklearners\Exceptions\FieldsNotDeclaredException;
 use Geeklearners\Exceptions\InvalidModelException;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Str;
 
 class CrudController extends Controller
 {
@@ -42,14 +44,12 @@ class CrudController extends Controller
         }
         $additional_cols = method_exists($this->modelPath, 'additionalColumns') ? call_user_func([$this->modelPath, 'additionalColumns']) : [];
         $a_cols = $this->filterColsName($additional_cols);
-        // dd($a_cols);
         return view("admin::index")
             ->with(['items' => $items, 'cols' => $cols, 'a_cols' => $a_cols])->with('class_name', $this->modelPath);
     }
 
     private function filterColsName($cols)
     {
-        // dd($cols);
         $c = [];
         foreach ($cols as $key => $val) {
             if (is_callable($val)) {
@@ -78,10 +78,41 @@ class CrudController extends Controller
         if (property_exists($this->modelPath, 'form_requests') && isset($this->modelPath::$form_requests['store'])) {
             app()->make($this->modelPath::$form_requests['store']);
         }
-        $data = $this->modelPath::create(app('request')->all());
+        $data = $this->modelPath::create(app('request')->except($this->extractFileFields()));
+        $this->processUploadFiles($data);
         session()->flash('flash_success', 'Resource created successful!');
         return redirect()
             ->route(config('admin.prefix') . '.index', ['model' => $this->modelUrlSegment]);
+    }
+    public function processUploadFiles($model)
+    {
+        $request = app('request');
+        foreach ($this->extractFileFields() as $name) {
+            $files = $request->file($name);
+            $combined_names = [];
+            foreach ($files as $file) {
+                if ($file instanceof UploadedFile) {
+                    $file_name = Str::random(16) . '.' . $file->getClientOriginalExtension();
+                    $file->move(storage_path('app/' . $this->modelUrlSegment), $file_name);
+                    $combined_names[] = $file_name;
+                    $model->update([$name => implode('|', $combined_names)]);
+                }
+            }
+        }
+    }
+    /**
+     * Extract file fields from the model
+     */
+    private function extractFileFields()
+    {
+        $form_fields = $this->modelPath::formFields();
+        $file_fields = [];
+        array_filter($form_fields, function ($metadata, $field) use (&$file_fields) {
+            if ($metadata['type'] == "file") {
+                $file_fields[] = $field;
+            }
+        }, ARRAY_FILTER_USE_BOTH);
+        return $file_fields;
     }
 
     public function edit($model, $id)

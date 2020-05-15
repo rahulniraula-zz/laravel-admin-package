@@ -17,6 +17,7 @@ trait ModelAdmin
         }
         return $this->$col ?? '';
     }
+
     public static function getLabel($label)
     {
         if (property_exists(get_called_class(), 'labelTransformer') && isset(get_called_class()::$labelTransformer[$label])) {

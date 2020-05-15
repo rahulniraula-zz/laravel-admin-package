@@ -38,6 +38,8 @@ class Util
             foreach ($metadata['options'] as $key => $value) {
                 $str .= \Form::radio($field, $key, null, ['class' => 'form-check-inline']) . $value . "<br>";
             }
+        } elseif ($metadata['type'] == "file") {
+            $str .= \Form::file($field . '[]', $metadata);
         } else {
             $str .= \Form::text($field, '', $metadata);
         }
