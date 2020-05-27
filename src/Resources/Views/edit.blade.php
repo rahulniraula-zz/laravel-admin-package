@@ -1,6 +1,8 @@
 @extends(config('admin.base_admin_layout'))
 @section('admin_content')
-{!! Form::model($item,['url' =>route(config('admin.prefix') . '.update',['model'=>$modelUrlSegment,'id'=>$item->id]) ])
+{!! Form::model($item,['files'=>true,'url' =>route(config('admin.prefix') .
+'.update',['model'=>$modelUrlSegment,'id'=>$item->id])
+])
 !!}
 <input type="hidden" name="_method" value="put">
 <div class="row">
@@ -8,7 +10,7 @@
     <div class="{{isset($metadata['wrapper_css_class'])?$metadata['wrapper_css_class']:'col-md-4'}}">
         <div class="form-group">
             {!! Form::label($field_name,ucwords($field_name))!!}
-            {!! Geeklearners\Util\Util::buildForm($field_name,$metadata) !!}
+            {!! Geeklearners\Util\Util::buildForm($field_name,$metadata,$item) !!}
         </div>
     </div>
     @endforeach

@@ -25,4 +25,8 @@ trait ModelAdmin
         }
         return ucwords($label);
     }
+    public function getActionColumn()
+    {
+        return "<a href='" . route(config('admin.prefix') . '.edit', ['model' => app('request')->segment(2), 'id' => $this->id]) . "' class='btn btn-success fa fa-edit'>Edit</a> | <form method='post' style='display:inline' action='" . route(config('admin.prefix') . '.destroy', ['model' => app('request')->segment(2), 'id' => $this->id]) . "'><input type='hidden' name='_method' value='delete'><input type='hidden' name='_token' value='" . csrf_token() . "'><input type='submit' value='Delete' class='btn btn-danger btn-sm'></form>";
+    }
 }

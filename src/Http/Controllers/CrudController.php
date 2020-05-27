@@ -90,12 +90,14 @@ class CrudController extends Controller
         foreach ($this->extractFileFields() as $name) {
             $files = $request->file($name);
             $combined_names = [];
-            foreach ($files as $file) {
-                if ($file instanceof UploadedFile) {
-                    $file_name = Str::random(16) . '.' . $file->getClientOriginalExtension();
-                    $file->move(storage_path('app/' . $this->modelUrlSegment), $file_name);
-                    $combined_names[] = $file_name;
-                    $model->update([$name => implode('|', $combined_names)]);
+            if ($files) {
+                foreach ($files as $file) {
+                    if ($file instanceof UploadedFile) {
+                        $file_name = Str::random(16) . '.' . $file->getClientOriginalExtension();
+                        $file->move(storage_path('app/' . $this->modelUrlSegment), $file_name);
+                        $combined_names[] = $file_name;
+                        $model->update([$name => implode('|', $combined_names)]);
+                    }
                 }
             }
         }
@@ -118,7 +120,7 @@ class CrudController extends Controller
     public function edit($model, $id)
     {
         $item = $this->modelPath::find($id);
-        $fields = $this->modelPath::$form_fields;
+        $fields = $this->modelPath::formFields();
         if (property_exists($this->modelPath, 'form_requests') && isset($this->modelPath::$form_requests['edit'])) {
             app()->make($this->modelPath::$form_requests['edit']);
         }
@@ -132,7 +134,8 @@ class CrudController extends Controller
             app()->make($this->modelPath::$form_requests['update']);
         }
         $item = $this->modelPath::find($id);
-        $item->update(app('request')->all());
+        $item->update(app('request')->except($this->extractFileFields()));
+        $this->processUploadFiles($item);
         return redirect()
             ->route(config('admin.prefix') . '.index', ['model' => $model])
             ->with('flash_success', 'Resource updated successful!');
