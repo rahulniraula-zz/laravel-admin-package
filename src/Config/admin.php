@@ -3,5 +3,6 @@
 return [
     'prefix' => 'admin',
     'crud_classes' => [],
-    'base_admin_layout' => 'admin::default_layout'
+    'base_admin_layout' => 'admin::default_layout',
+    'languages' => [['code' => 'np'], ['code' => 'en']]
 ];
