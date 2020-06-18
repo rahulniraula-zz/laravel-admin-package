@@ -3,21 +3,27 @@
 {!! Form::open(['url' =>route(config('admin.prefix') . '.store',['model'=>$modelUrlSegment]),'files'=>true ]) !!}
 <div class="row">
     @foreach($fields as $field_name=>$metadata)
-    {{-- @php
+    @php
+    $lang=[];
+    if(property_exists($class_name,'do_not_translate')){
     $lang=in_array($field_name,
-    $class_name::$translatable)?config('admin.languages'):[['code' => 'np','name'=>'Nepali']]
+    $class_name::$do_not_translate)?[config('admin.default_language')]:config('admin.languages');
+    }else{
+    $lang=config('admin.languages');
+    }
+
     @endphp
     @foreach($lang as $language)
-    @if(true) --}}
+    @if(true)
     <div class="{{isset($metadata['wrapper_css_class'])?$metadata['wrapper_css_class']:'col-md-12'}}">
         <div class="form-group">
             {!!
-            Form::label($field_name,$class_name::getLabel($field_name))!!}
-            {!! Geeklearners\Util\Util::buildForm($field_name,$metadata) !!}
+            Form::label($field_name,$class_name::getLabel($field_name))!!} {{$language['code']}}
+            {!! Geeklearners\Util\Util::buildForm($field_name.'__'.$language['code'],$metadata) !!}
         </div>
     </div>
-    {{-- @endif
-    @endforeach --}}
+    @endif
+    @endforeach
 
     @endforeach
 </div>

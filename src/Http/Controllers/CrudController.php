@@ -7,6 +7,7 @@ use Geeklearners\Exceptions\FieldsNotDeclaredException;
 use Geeklearners\Exceptions\InvalidModelException;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Str;
+use Ramsey\Uuid\Uuid;
 
 class CrudController extends Controller
 {
@@ -78,17 +79,42 @@ class CrudController extends Controller
         if (property_exists($this->modelPath, 'form_requests') && isset($this->modelPath::$form_requests['store'])) {
             app()->make($this->modelPath::$form_requests['store']);
         }
-        $data = $this->modelPath::create(app('request')->except($this->extractFileFields()));
-        $this->processUploadFiles($data);
+        $uuid = Uuid::uuid4();
+        foreach (config('admin.languages') as $language) {
+            $data = $this->prepareDataForLanguage(app('request'), $language['code']);
+            $data = $this->truncateLanguageCodeFromKey($data);
+            $data = $this->modelPath::create(array_merge($data, ['uuid' => $uuid, 'lang' => $language['code']]));
+            $this->processUploadFiles($data, $language['code']);
+        }
+
         session()->flash('flash_success', 'Resource created successful!');
         return redirect()
             ->route(config('admin.prefix') . '.index', ['model' => $this->modelUrlSegment]);
     }
-    public function processUploadFiles($model)
+
+    public function truncateLanguageCodeFromKey($data)
+    {
+        $d = [];
+        foreach ($data as $key => $val) {
+            $key_without_lang = explode('__', $key)[0];
+            if (!in_array($key_without_lang, $this->extractFileFields())) {
+                $d[$key_without_lang] = $val;
+            }
+        }
+        return $d;
+    }
+    public function prepareDataForLanguage($request, $code)
+    {
+        $data = array_filter($request->all(), function ($key) use ($code) {
+            return preg_match('/__' . $code . '$/', $key);
+        }, ARRAY_FILTER_USE_KEY);
+        return $data;
+    }
+    public function processUploadFiles($model, $language_code, $edit_mode = false)
     {
         $request = app('request');
         foreach ($this->extractFileFields() as $name) {
-            $files = $request->file($name);
+            $files = $request->file($name . ($edit_mode ? '' : "__" . $language_code));
             $combined_names = [];
             if ($files) {
                 foreach ($files as $file) {
@@ -135,7 +161,7 @@ class CrudController extends Controller
         }
         $item = $this->modelPath::find($id);
         $item->update(app('request')->except($this->extractFileFields()));
-        $this->processUploadFiles($item);
+        $this->processUploadFiles($item, null, true);
         return redirect()
             ->route(config('admin.prefix') . '.index', ['model' => $model])
             ->with('flash_success', 'Resource updated successful!');

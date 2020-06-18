@@ -6,7 +6,7 @@ trait ModelAdmin
 {
     public static $form_submit_button = ['type' => 'button', 'value' => "Submit", 'class' => 'btn btn-primary'];
     public static $form_update_button = ['type' => 'button', 'value' => "Update", 'class' => 'btn btn-primary'];
-
+    // public static $do_not_translate = [];
     public function getValue($col, $method)
     {
         if (method_exists($this, $method)) {
@@ -28,5 +28,27 @@ trait ModelAdmin
     public function getActionColumn()
     {
         return "<a href='" . route(config('admin.prefix') . '.edit', ['model' => app('request')->segment(2), 'id' => $this->id]) . "' class='btn btn-success fa fa-edit'>Edit</a> | <form method='post' style='display:inline' action='" . route(config('admin.prefix') . '.destroy', ['model' => app('request')->segment(2), 'id' => $this->id]) . "'><input type='hidden' name='_method' value='delete'><input type='hidden' name='_token' value='" . csrf_token() . "'><input type='submit' value='Delete' class='btn btn-danger btn-sm'></form>";
+    }
+    public function __get($key)
+    {
+        if (property_exists($this, 'do_not_translate')) {
+            if (
+                is_array($this->do_not_translate)
+                && in_array($key, $this->do_not_translate)
+                && $this->attributes['lang'] !== config('admin.default_language')['code']
+            ) {
+                return $this->getDefaultModel()->attributes[$key];
+            }
+        }
+        return parent::__get($key);
+    }
+    public $defaultModel = null;
+    public function getDefaultModel()
+    {
+        if (!$this->defaultModel) {
+            $this->defaultModel
+                = $this->where('uuid', $this->attributes['uuid'])->where('lang', 'np')->first();
+        }
+        return $this->defaultModel;
     }
 }
