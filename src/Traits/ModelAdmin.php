@@ -33,9 +33,10 @@ trait ModelAdmin
     {
         if (property_exists($this, 'do_not_translate')) {
             if (
-                is_array($this->do_not_translate)
-                && in_array($key, $this->do_not_translate)
+                is_array(get_called_class()::$do_not_translate)
+                && in_array($key, get_called_class()::$do_not_translate)
                 && $this->attributes['lang'] !== config('admin.default_language')['code']
+                && $this->getDefaultModel()
             ) {
                 return $this->getDefaultModel()->attributes[$key];
             }
@@ -47,7 +48,8 @@ trait ModelAdmin
     {
         if (!$this->defaultModel) {
             $this->defaultModel
-                = $this->where('uuid', $this->attributes['uuid'])->where('lang', 'np')->first();
+                = $this->where('uuid', $this->attributes['uuid'])
+                ->where('lang', config('admin.default_language')['code'])->first();
         }
         return $this->defaultModel;
     }

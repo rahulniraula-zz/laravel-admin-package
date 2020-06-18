@@ -18,7 +18,8 @@
     <div class="{{isset($metadata['wrapper_css_class'])?$metadata['wrapper_css_class']:'col-md-12'}}">
         <div class="form-group">
             {!!
-            Form::label($field_name,$class_name::getLabel($field_name))!!} {{$language['code']}}
+            Form::label($field_name,$class_name::getLabel($field_name))!!} <span
+                class="label_language">{{$language['code']}}</span>
             {!! Geeklearners\Util\Util::buildForm($field_name.'__'.$language['code'],$metadata) !!}
         </div>
     </div>
