@@ -120,7 +120,7 @@ class CrudController extends Controller
                 foreach ($files as $file) {
                     if ($file instanceof UploadedFile) {
                         $file_name = Str::random(16) . '.' . $file->getClientOriginalExtension();
-                        $file->move(storage_path('app/' . $this->modelUrlSegment), $file_name);
+                        $file->move(storage_path('app/public/' . $this->modelUrlSegment), $file_name);
                         $combined_names[] = $file_name;
                         $model->update([$name => implode('|', $combined_names)]);
                     }
