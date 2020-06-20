@@ -61,4 +61,14 @@ trait ModelAdmin
         }
         return $this->defaultModel;
     }
+
+    public function hasHtmlEnabled($col)
+    {
+        if (property_exists(get_called_class(), 'html_fields')) {
+            if (in_array($col, get_called_class()::$html_fields)) {
+                return true;
+            }
+        }
+        return false;
+    }
 }

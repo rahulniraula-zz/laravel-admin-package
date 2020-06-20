@@ -13,7 +13,13 @@
     @foreach($items as $item)
     <tr>
         @foreach($cols as $col)
-        <td>{{$item->getValue($col,'colsToInclude')}}</td>
+        <td>
+            @if($item->hasHtmlEnabled($col))
+            {!!$item->getValue($col,'colsToInclude')!!}
+            @else
+            {{$item->getValue($col,'colsToInclude')}}
+            @endif
+        </td>
         @endforeach
         @foreach($a_cols as $a_col)
         <td>{!!$item->getValue($a_col,'additionalColumns')!!}</td>
