@@ -26,7 +26,7 @@ class CrudController extends Controller
         $classes = config('admin.crud_classes');
         $d = preg_grep('/' . $this->model . '$/', $classes);
         if (count($d) > 0) {
-            return $d[0];
+            return array_values($d)[0];
         } else {
             throw new InvalidModelException("No Model Configured in admin.php configuration file");
         }
