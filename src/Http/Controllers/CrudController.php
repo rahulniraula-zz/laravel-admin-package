@@ -63,6 +63,9 @@ class CrudController extends Controller
     }
     public function create()
     {
+        if (property_exists($this->modelPath, 'form_requests') && isset($this->modelPath::$form_requests['create'])) {
+            app()->make($this->modelPath::$form_requests['create']);
+        }
         if (method_exists($this->modelPath, 'formFields')) {
             $fields = $this->modelPath::formFields();
             return view("admin::create")
