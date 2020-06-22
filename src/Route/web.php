@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Route;
 Route::group([
     'prefix' => config('admin.prefix'),
     'namespace' => 'Geeklearners\Http\Controllers',
-    'middleware' => 'web'
+    'middleware' => array_merge(['web'], config('admin.middlewares'))
 ], function () {
     Route::get('/', function () {
         return "admin";
