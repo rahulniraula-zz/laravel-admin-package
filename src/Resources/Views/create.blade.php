@@ -1,5 +1,7 @@
 @extends(config('admin.base_admin_layout'))
 @section('admin_content')
+@php Illuminate\Support\Facades\Event::dispatch('before.render',["create",$class_name]) @endphp
+{{app()->make('ViewRecorder')->getContent("create")}}
 {!! Form::open(['url' =>route(config('admin.prefix') . '.store',['model'=>$modelUrlSegment]),'files'=>true ]) !!}
 <div class="row">
     @foreach($fields as $field_name=>$metadata)
