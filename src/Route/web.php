@@ -8,9 +8,6 @@ Route::group([
     'namespace' => 'Geeklearners\Http\Controllers',
     'middleware' => array_merge(['web'], config('admin.middlewares'))
 ], function () {
-    Route::get('/', function () {
-        return "admin";
-    });
     Route::get('{model}', 'CrudController@index')
         ->where('model', Util::prepareRoutingRegex())
         ->name(config('admin.prefix') . '.index');
