@@ -1,8 +1,8 @@
 @extends(config('admin.base_admin_layout'))
 @section('admin_content')
-@if(count($items)>0)
 @php Illuminate\Support\Facades\Event::dispatch('before.render',["list",$class_name]) @endphp
 {{app()->make('ViewRecorder')->getContent("list")}}
+@if(count($items)>0)
 <table class="table table-hover">
     <tr>
         @foreach($cols as $col)

@@ -1,7 +1,7 @@
 @extends(config('admin.base_admin_layout'))
 @section('admin_content')
 @php Illuminate\Support\Facades\Event::dispatch('before.render',["create",$class_name]) @endphp
-{{app()->make('ViewRecorder')->getContent("create")}}
+{{app()->make('ViewRecorder')->getContent("edit")}}
 {!! Form::model($item,['files'=>true,'url' =>route(config('admin.prefix') .
 '.update',['model'=>$modelUrlSegment,'id'=>$item->id])
 ])
