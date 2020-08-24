@@ -31,7 +31,7 @@ class ContactType extends Model
     /**
      * Form fields to be displayed during creation
      */
-    public static $form_fields = [
+    public static function formFields = [
         'name' => [
             'type' => 'text', 'class' => 'form-control'
         ],
